@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order - Rooti & Naan Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FDF8F3;
+    --card: #FFFFFF;
+    --text: #1A1208;
+    --text-muted: #6B5B45;
+    --accent: #C8541A;
+    --accent-light: #FAEEE6;
+    --accent-dark: #9A3D10;
+    --border: #E8DDD0;
+    --success: #2D7A4F;
+    --success-bg: #EDF7F2;
+    --input-bg: #FDFAF7;
+    --shadow: 0 2px 16px rgba(200,84,26,0.08);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  .header {
+    background: var(--accent);
+    color: white;
+    padding: 28px 24px 22px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: -20px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+
+  .shop-icon {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 26px;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+
+  .header p {
+    font-size: 13px;
+    opacity: 0.85;
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  .form-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  /* Item Cards */
+  .item-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--input-bg);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 10px;
+  }
+
+  .item-card:last-child { margin-bottom: 0; }
+
+  .item-card:hover { border-color: var(--accent); background: var(--accent-light); }
+
+  .item-card.active {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .item-radio {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .item-card.active .item-radio {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .item-card.active .item-radio::after {
+    content: '';
+    width: 8px; height: 8px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .item-emoji { font-size: 28px; }
+
+  .item-info { flex: 1; }
+  .item-name { font-weight: 600; font-size: 15px; }
+  .item-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .item-price {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--accent);
+  }
+
+  /* Quantity Selector */
+  .qty-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 50px;
+    overflow: hidden;
+    width: fit-content;
+  }
+
+  .qty-btn {
+    width: 44px; height: 44px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--accent);
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .qty-btn:hover { background: var(--accent-light); }
+
+  .qty-display {
+    min-width: 50px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+    border: none;
+    border-left: 1.5px solid var(--border);
+    border-right: 1.5px solid var(--border);
+    background: transparent;
+    padding: 0 8px;
+    height: 44px;
+    line-height: 44px;
+  }
+
+  /* Name Input */
+  .input-group { margin-bottom: 14px; }
+  .input-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .input-group input, .input-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    background: var(--input-bg);
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-group input:focus, .input-group textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .input-group textarea { resize: vertical; min-height: 80px; }
+
+  /* Toggle Switch */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+    background: var(--input-bg);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .toggle-left { display: flex; align-items: center; gap: 12px; }
+  .toggle-icon { font-size: 22px; }
+  .toggle-title { font-weight: 600; font-size: 15px; }
+  .toggle-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+
+  .toggle-switch {
+    width: 50px; height: 28px;
+    background: var(--border);
+    border-radius: 50px;
+    position: relative;
+    transition: background 0.3s;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch.on { background: var(--accent); }
+
+  .toggle-knob {
+    width: 22px; height: 22px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px; left: 3px;
+    transition: transform 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  .toggle-switch.on .toggle-knob { transform: translateX(22px); }
+
+  .delivery-fields {
+    display: none;
+    margin-top: 14px;
+  }
+
+  .delivery-fields.show { display: block; }
+
+  /* Price Summary */
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--text-muted);
+    border-bottom: 1px dashed var(--border);
+  }
+
+  .price-row:last-child { border-bottom: none; }
+
+  .price-row.total {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    padding-top: 12px;
+  }
+
+  .price-row.total span:last-child { color: var(--accent); }
+
+  /* Submit Button */
+  .submit-btn {
+    width: 100%;
+    padding: 17px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 20px;
+    letter-spacing: 0.2px;
+  }
+
+  .submit-btn:hover { background: var(--accent-dark); }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { background: var(--border); cursor: not-allowed; color: var(--text-muted); }
+
+  .notice {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  /* Loading State */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(253,248,243,0.9);
+    z-index: 999;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .loading-overlay.show { display: flex; }
+
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="shop-icon">🫓</div>
+  <h1>Rooti & Naan Shop</h1>
+  <p>Taaza • Garam • Swadisht</p>
+</div>
+
+<div class="form-container">
+
+  <!-- Customer Name -->
+  <div class="section-label">Aapka Naam</div>
+  <div class="card">
+    <div class="input-group" style="margin-bottom:0;">
+      <input type="text" id="customerName" placeholder="Naam likhein..." />
+    </div>
+  </div>
+
+  <!-- Item Selection -->
+  <div class="section-label">Item Select Karein</div>
+  <div class="card">
+    <div class="item-card active" data-item="rooti" data-price="15" onclick="selectItem(this)">
+      <div class="item-radio"></div>
+      <div class="item-emoji">🫓</div>
+      <div class="item-info">
+        <div class="item-name">Rooti</div>
+        <div class="item-desc">Tandoor mein paki, crispy</div>
+      </div>
+      <div class="item-price">Rs. 15</div>
+    </div>
+
+    <div class="item-card" data-item="naan" data-price="25" onclick="selectItem(this)">
+      <div class="item-radio"></div>
+      <div class="item-emoji">🍞</div>
+      <div class="item-info">
+        <div class="item-name">Naan</div>
+        <div class="item-desc">Soft, butter wali</div>
+      </div>
+      <div class="item-price">Rs. 25</div>
+    </div>
+
+    <div class="item-card" data-item="kulcha" data-price="30" onclick="selectItem(this)">
+      <div class="item-radio"></div>
+      <div class="item-emoji">🥙</div>
+      <div class="item-info">
+        <div class="item-name">Kulcha</div>
+        <div class="item-desc">Stuffed, crispy edges</div>
+      </div>
+      <div class="item-price">Rs. 30</div>
+    </div>
+  </div>
+
+  <!-- Quantity -->
+  <div class="section-label">Quantity</div>
+  <div class="card">
+    <div class="qty-row">
+      <span style="font-size:14px; color: var(--text-muted);">Kitni chahiye?</span>
+      <div class="qty-wrapper">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <div class="qty-display" id="qtyDisplay">1</div>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delivery Toggle -->
+  <div class="section-label">Delivery</div>
+  <div class="card">
+    <div class="toggle-row" onclick="toggleDelivery()">
+      <div class="toggle-left">
+        <div class="toggle-icon">🛵</div>
+        <div>
+          <div class="toggle-title">Home Delivery</div>
+          <div class="toggle-sub">Ghar par mangwayen</div>
+        </div>
+      </div>
+      <div class="toggle-switch" id="deliveryToggle">
+        <div class="toggle-knob"></div>
+      </div>
+    </div>
+
+    <div class="delivery-fields" id="deliveryFields">
+      <div class="input-group">
+        <label>Delivery Address</label>
+        <textarea id="deliveryAddress" placeholder="Ghar ka poora address likhein..."></textarea>
+      </div>
+      <div class="input-group" style="margin-bottom:0;">
+        <label>Phone Number</label>
+        <input type="tel" id="phoneNumber" placeholder="03XX-XXXXXXX" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Price Summary -->
+  <div class="section-label">Order Summary</div>
+  <div class="card">
+    <div class="price-row">
+      <span id="summaryItem">Rooti × 1</span>
+      <span id="summaryPrice">Rs. 15</span>
+    </div>
+    <div class="price-row" id="deliveryRow" style="display:none;">
+      <span>Delivery Charge</span>
+      <span> +  </span>
+    </div>
+    <div class="price-row total">
+      <span>Total</span>
+      <span id="totalPrice">Rs. 15</span>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
+    Order Place Karein →
+  </button>
+  <p class="notice">Order submit hone ke baad aapko Token Number milega</p>
+
+</div>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <p style="color: var(--text-muted); font-size:14px;">Order bheja ja raha hai...</p>
+</div>
+
+<script>
+  const N8N_WEBHOOK_URL = 'https://rootinaan.app.n8n.cloud/webhook-test/rooti-naan-order';
+
+  let selectedItem = 'rooti';
+  let selectedPrice = 15;
+  let quantity = 1;
+  let isDelivery = false;
+
+  function selectItem(el) {
+    document.querySelectorAll('.item-card').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    selectedItem = el.dataset.item;
+    selectedPrice = parseInt(el.dataset.price);
+    updateSummary();
+  }
+
+  function changeQty(delta) {
+    quantity = Math.max(1, Math.min(50, quantity + delta));
+    document.getElementById('qtyDisplay').textContent = quantity;
+    updateSummary();
+  }
+
+  function toggleDelivery() {
+    isDelivery = !isDelivery;
+    const toggle = document.getElementById('deliveryToggle');
+    const fields = document.getElementById('deliveryFields');
+    const row = document.getElementById('deliveryRow');
+    toggle.classList.toggle('on', isDelivery);
+    fields.classList.toggle('show', isDelivery);
+    row.style.display = isDelivery ? 'flex' : 'none';
+    updateSummary();
+  }
+
+  function updateSummary() {
+    const itemNames = { rooti: 'Rooti', naan: 'Naan', kulcha: 'Kulcha' };
+    const subtotal = selectedPrice * quantity;
+    const deliveryCharge = 0;
+    const total = subtotal + deliveryCharge;
+    document.getElementById('summaryItem').textContent = `${itemNames[selectedItem]} × ${quantity}`;
+    document.getElementById('summaryPrice').textContent = `Rs. ${subtotal}`;
+    document.getElementById('totalPrice').textContent = `Rs. ${total}`;
+  }
+
+  async function submitOrder() {
+    const name = document.getElementById('customerName').value.trim();
+    if (!name) {
+      alert('Please enter your name!');
+      document.getElementById('customerName').focus();
+      return;
+    }
+    if (isDelivery) {
+      const addr = document.getElementById('deliveryAddress').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      if (!addr || !phone) {
+        alert('Delivery ke liye address aur phone number zaroori hai');
+        return;
+      }
+    }
+
+    const itemNames = { rooti: 'Rooti', naan: 'Naan', kulcha: 'Kulcha' };
+    const subtotal = selectedPrice * quantity;
+    const deliveryCharge = 0;
+    const total = subtotal + deliveryCharge;
+    const tokenNum = Math.floor(1000 + Math.random() * 9000);
+    const timestamp = new Date().toISOString();
+
+    const orderData = {
+      token: tokenNum,
+      customerName: name,
+      item: itemNames[selectedItem],
+      pricePerItem: selectedPrice,
+      quantity: quantity,
+      subtotal: subtotal,
+      deliveryCharge: deliveryCharge,
+      totalPrice: total,
+      isDelivery: isDelivery,
+      deliveryAddress: isDelivery ? document.getElementById('deliveryAddress').value.trim() : '',
+      phone: isDelivery ? document.getElementById('phoneNumber').value.trim() : '',
+      status: 'Pending',
+      timestamp: timestamp
+    };
+
+    document.getElementById('loadingOverlay').classList.add('show');
+    document.getElementById('submitBtn').disabled = true;
+
+    try {
+      await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        body: JSON.stringify(orderData)
+      });
+    } catch (e) {
+      console.log('Webhook error (may be no-cors):', e);
+    }
+
+    setTimeout(() => {
+      const params = new URLSearchParams({
+        token: tokenNum,
+        name: name,
+        item: itemNames[selectedItem],
+        qty: quantity,
+        total: total,
+        delivery: isDelivery ? '1' : '0',
+        address: isDelivery ? document.getElementById('deliveryAddress').value.trim() : ''
+      });
+      window.location.href = 'token.html?' + params.toString();
+    }, 1500);
+  }
+</script>
+</body>
+</html>

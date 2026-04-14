@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token - Rooti & Naan Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #FDF8F3;
+    --text: #1A1208;
+    --text-muted: #6B5B45;
+    --accent: #C8541A;
+    --accent-light: #FAEEE6;
+    --border: #E8DDD0;
+    --card: #FFFFFF;
+    --success: #2D7A4F;
+    --success-bg: #EDF7F2;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+  }
+
+  .success-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--success-bg);
+    color: var(--success);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    border: 1px solid rgba(45,122,79,0.2);
+  }
+
+  .check-circle {
+    width: 20px; height: 20px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 11px;
+  }
+
+  /* TICKET CARD */
+  .ticket {
+    width: 100%;
+    max-width: 380px;
+    background: var(--card);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 40px rgba(200,84,26,0.12), 0 2px 8px rgba(0,0,0,0.04);
+    position: relative;
+  }
+
+  .ticket-header {
+    background: var(--accent);
+    padding: 24px 28px 20px;
+    text-align: center;
+    color: white;
+    position: relative;
+  }
+
+  .ticket-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 20px;
+    background: var(--card);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+
+  .shop-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    margin-bottom: 4px;
+  }
+
+  .shop-tagline {
+    font-size: 11px;
+    opacity: 0.8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 300;
+  }
+
+  .ticket-body {
+    padding: 28px 28px 20px;
+  }
+
+  .token-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+
+  .token-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 6px;
+  }
+
+  .token-hash {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  /* Dashed divider */
+  .dashed-line {
+    position: relative;
+    margin: 20px -28px;
+    height: 1px;
+  }
+
+  .dashed-line::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 20px; right: 20px;
+    border-top: 2px dashed var(--border);
+  }
+
+  .dashed-line .circle-left, .dashed-line .circle-right {
+    position: absolute;
+    top: -12px;
+    width: 24px; height: 24px;
+    background: var(--bg);
+    border-radius: 50%;
+    border: 1px solid var(--border);
+  }
+
+  .dashed-line .circle-left { left: -13px; }
+  .dashed-line .circle-right { right: -13px; }
+
+  /* Order Details */
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-row:last-child { border-bottom: none; }
+
+  .detail-label { color: var(--text-muted); font-weight: 400; }
+  .detail-value { font-weight: 600; color: var(--text); }
+  .detail-value.accent { color: var(--accent); }
+
+  .detail-value.status {
+    background: var(--success-bg);
+    color: var(--success);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* Delivery Badge */
+  .delivery-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent-light);
+    border: 1px dashed var(--accent);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .delivery-badge .icon { font-size: 18px; }
+  .delivery-badge .addr { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Total Box */
+  .total-box {
+    background: var(--accent);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    margin-top: 16px;
+  }
+
+  .total-box .label { font-size: 14px; opacity: 0.9; }
+  .total-box .amount { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; }
+
+  /* Barcode */
+  .barcode-section {
+    padding: 20px 28px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    background: #FAFAFA;
+  }
+
+  .barcode-label {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  #barcode { max-width: 100%; height: 70px; }
+
+  .scan-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 8px;
+  }
+
+  /* Instructions */
+  .instructions {
+    margin-top: 24px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .inst-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding: 0 4px;
+  }
+
+  .inst-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 0 4px;
+  }
+
+  .step-num {
+    width: 26px; height: 26px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .step-text { font-size: 13px; color: var(--text-muted); padding-top: 4px; }
+  .step-text strong { color: var(--text); font-weight: 600; }
+
+  /* Action Buttons */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .btn-secondary, .btn-primary {
+    flex: 1;
+    padding: 14px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn-secondary:hover { background: var(--bg); border-color: var(--accent); }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover { filter: brightness(0.9); }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .instructions, .action-row, .success-badge { display: none; }
+    .ticket { box-shadow: none; border: 1px solid #ddd; max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="success-badge">
+  <div class="check-circle">✓</div>
+  Order Successfully Place Ho Gaya!
+</div>
+
+<div class="ticket" id="ticket">
+  <div class="ticket-header">
+    <div class="shop-name">🫓 Rooti & Naan Shop</div>
+    <div class="shop-tagline">Your Order Token</div>
+  </div>
+
+  <div class="ticket-body">
+    <div class="token-label">Token Number</div>
+    <div class="token-number" id="tokenNum">—</div>
+    <div class="token-hash" id="tokenHash">#RNS-0000</div>
+
+    <div class="dashed-line">
+      <div class="circle-left"></div>
+      <div class="circle-right"></div>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Customer</span>
+      <span class="detail-value" id="detailName">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Item</span>
+      <span class="detail-value" id="detailItem">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Quantity</span>
+      <span class="detail-value" id="detailQty">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Type</span>
+      <span class="detail-value" id="detailType">—</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Status</span>
+      <span class="detail-value status">Pending ⏳</span>
+    </div>
+
+    <div class="delivery-badge" id="deliveryInfo" style="display:none;">
+      <div class="icon">🛵</div>
+      <div>
+        <div style="font-weight:600; font-size:13px; color: var(--accent);">Home Delivery</div>
+        <div class="addr" id="deliveryAddr">—</div>
+      </div>
+    </div>
+
+    <div class="total-box">
+      <div class="label">Total Amount</div>
+      <div class="amount" id="totalAmount">Rs. —</div>
+    </div>
+  </div>
+
+  <div class="barcode-section">
+    <div class="barcode-label">Scan for Order Verification</div>
+    <svg id="barcode"></svg>
+    <div class="scan-hint">Counter par yeh barcode scan karwayein</div>
+  </div>
+</div>
+
+<!-- Instructions -->
+<div class="instructions">
+  <div class="inst-title">Aage Kya Karna Hai?</div>
+
+  <div class="inst-step">
+    <div class="step-num">1</div>
+    <div class="step-text">Yeh token <strong>screenshot</strong> kar lein ya print karwa lein</div>
+  </div>
+  <div class="inst-step">
+    <div class="step-num">2</div>
+    <div class="step-text">Counter par jayen aur <strong>token number batayen</strong></div>
+  </div>
+  <div class="inst-step">
+    <div class="step-num">3</div>
+    <div class="step-text"><strong>Total amount pay karein</strong> aur apna order receive karein</div>
+  </div>
+</div>
+
+<div class="action-row">
+  <button class="btn-secondary" onclick="window.print()">🖨 Print Token</button>
+  <button class="btn-primary" onclick="newOrder()">+ Naya Order</button>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const token = params.get('token') || Math.floor(1000 + Math.random() * 9000);
+  const name = params.get('name') || 'Customer';
+  const item = params.get('item') || 'Rooti';
+  const qty = params.get('qty') || '1';
+  const total = params.get('total') || '15';
+  const isDelivery = params.get('delivery') === '1';
+  const address = params.get('address') || '';
+
+  document.getElementById('tokenNum').textContent = token;
+  document.getElementById('tokenHash').textContent = '#RNS-' + token;
+  document.getElementById('detailName').textContent = name;
+  document.getElementById('detailItem').textContent = item;
+  document.getElementById('detailQty').textContent = qty + ' pcs';
+  document.getElementById('detailType').textContent = isDelivery ? '🛵 Home Delivery' : '🏪 Counter Pickup';
+  document.getElementById('totalAmount').textContent = 'Rs. ' + total;
+
+  if (isDelivery && address) {
+    document.getElementById('deliveryInfo').style.display = 'flex';
+    document.getElementById('deliveryAddr').textContent = address;
+  }
+
+  JsBarcode("#barcode", 'RNS-' + token + '-' + total, {
+    format: "CODE128",
+    lineColor: "#1A1208",
+    width: 1.8,
+    height: 60,
+    displayValue: false,
+    margin: 0
+  });
+
+  function newOrder() {
+    window.location.href = 'order-form.html';
+  }
+</script>
+</body>
+</html>
