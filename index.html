@@ -382,8 +382,8 @@ async function submitOrder() {
     itemSummary: keys.map(id => `${MENU.find(m=>m.id===id).name} × ${cart[id]}`).join(', '),
     totalPrice: total,
     isDelivery,
-    phone: isDelivery ? phone : '',
-    deliveryAddress: isDelivery ? address : '',
+    phone: isDelivery? phone: '',
+    deliveryAddress: isDelivery? address: '',
     status: 'Pending',
     timestamp: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 80 * 60 * 1000).toISOString()
@@ -393,7 +393,7 @@ async function submitOrder() {
   existing.push(orderRecord);
   localStorage.setItem('rns_orders', JSON.stringify(existing));
 
-  window.location.href = 'n_token.html';
+  window.location.href = 'token.html';
 }
 
 function showError(msg) {
