@@ -1,600 +1,409 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Order - Rooti & Naan Shop</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Rooti & Naan Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #FDF8F3;
-    --card: #FFFFFF;
-    --text: #1A1208;
-    --text-muted: #6B5B45;
-    --accent: #C8541A;
-    --accent-light: #FAEEE6;
-    --accent-dark: #9A3D10;
-    --border: #E8DDD0;
-    --success: #2D7A4F;
-    --success-bg: #EDF7F2;
-    --input-bg: #FDFAF7;
-    --shadow: 0 2px 16px rgba(200,84,26,0.08);
-    --radius: 14px;
-    --radius-sm: 8px;
-  }
+:root {
+  --bg:         #0d1117;
+  --surface:    #161b22;
+  --surface2:   #1c2230;
+  --border:     #253047;
+  --text:       #e8dcc8;
+  --muted:      #8b7d6b;
+  --primary:    #e07b3a;
+  --primary-dk: #c4621e;
+  --gold:       #f0b429;
+  --red:        #e05555;
+  --radius:     14px;
+  --radius-sm:  8px;
+  --shadow:     0 4px 24px rgba(0,0,0,0.4);
+}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 0;
-  }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  .header {
-    background: var(--accent);
-    color: white;
-    padding: 28px 24px 22px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
+.hero { position: relative; height: 340px; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 48px; text-align: center; }
+.hero-bg { position: absolute; inset: 0; background: linear-gradient(to top, var(--bg) 0%, rgba(13,17,23,0.6) 50%, rgba(13,17,23,0.3) 100%), url('https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=1200&q=80') center/cover no-repeat; }
+.hero-content { position: relative; z-index: 2; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 6vw, 4rem); font-weight: 800; color: #fff; line-height: 1.1; text-shadow: 0 2px 20px rgba(0,0,0,0.5); }
+.hero-sub { font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--primary); font-weight: 600; margin-top: 8px; }
 
-  .header::before {
-    content: '';
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.07);
-  }
+.info-banner { max-width: 680px; margin: -28px auto 0; position: relative; z-index: 10; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 28px; display: flex; align-items: center; justify-content: center; gap: 28px; box-shadow: var(--shadow); }
+.info-item { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 500; }
+.info-item svg { color: var(--primary); flex-shrink: 0; }
+.info-divider { width: 1px; height: 20px; background: var(--border); }
 
-  .header::after {
-    content: '';
-    position: absolute;
-    bottom: -30px; left: -20px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-  }
+.wrapper { max-width: 1060px; margin: 0 auto; padding: 40px 16px 80px; display: grid; grid-template-columns: 1fr 360px; gap: 32px; align-items: start; }
+@media (max-width: 780px) { .wrapper { grid-template-columns: 1fr; } }
 
-  .shop-icon {
-    width: 56px; height: 56px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 12px;
-    font-size: 26px;
-  }
+.section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--primary); border-bottom: 1px solid var(--border); padding-bottom: 12px; margin-bottom: 24px; }
+.menu-list { display: flex; flex-direction: column; gap: 20px; }
 
-  .header h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    font-weight: 700;
-    letter-spacing: -0.3px;
-  }
+.menu-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s; box-shadow: var(--shadow); }
+.menu-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(224,123,58,0.15); }
+.menu-img-wrap { position: relative; width: 160px; flex-shrink: 0; overflow: hidden; }
+.menu-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.menu-card:hover .menu-img-wrap img { transform: scale(1.07); }
+.badge { position: absolute; top: 10px; left: 10px; background: var(--gold); color: #1a1000; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; }
+.menu-body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.menu-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+.menu-name { font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); transition: color 0.2s; }
+.menu-card:hover .menu-name { color: var(--primary); }
+.menu-price { font-weight: 700; color: var(--primary); font-size: 1.05rem; white-space: nowrap; }
+.menu-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; flex: 1; margin-bottom: 14px; }
+.menu-footer { display: flex; justify-content: flex-end; }
 
-  .header p {
-    font-size: 13px;
-    opacity: 0.85;
-    margin-top: 4px;
-    font-weight: 300;
-  }
+.qty-ctrl { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--border); border-radius: 999px; overflow: hidden; }
+.qty-btn { width: 34px; height: 34px; background: none; border: none; color: var(--primary); font-size: 1.2rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; flex-shrink: 0; }
+.qty-btn:hover { background: rgba(224,123,58,0.12); }
+.qty-num { min-width: 36px; text-align: center; font-weight: 700; font-size: 0.95rem; border-left: 1px solid var(--border); border-right: 1px solid var(--border); height: 34px; line-height: 34px; }
+.add-btn { padding: 8px 20px; background: none; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 999px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s, color 0.2s; }
+.add-btn:hover { background: var(--primary); color: #fff; }
+.add-btn svg { width: 14px; height: 14px; }
+@media (max-width: 520px) { .menu-img-wrap { width: 110px; } }
 
-  .form-container {
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 20px 16px 40px;
-  }
+.order-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); position: sticky; top: 20px; }
+.panel-title { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.cart-empty { text-align: center; padding: 32px 0; color: var(--muted); }
+.cart-empty-icon { width: 56px; height: 56px; background: var(--surface2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; opacity: 0.6; }
+.cart-empty p { font-size: 0.9rem; }
+.cart-empty small { font-size: 0.75rem; }
+.cart-items { max-height: 220px; overflow-y: auto; margin-bottom: 16px; }
+.cart-items::-webkit-scrollbar { width: 4px; }
+.cart-items::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.cart-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; margin-bottom: 8px; animation: slideIn 0.2s ease; }
+@keyframes slideIn { from { opacity:0; transform: translateX(12px); } to { opacity:1; transform:translateX(0); } }
+.cart-row-name { font-weight: 600; font-size: 0.85rem; }
+.cart-row-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.cart-row-right { display: flex; align-items: center; gap: 8px; }
+.cart-row-price { font-weight: 700; font-size: 0.85rem; color: var(--primary); min-width: 52px; text-align: right; }
+.cart-mini-btns { display: flex; flex-direction: column; gap: 3px; }
+.cart-mini-btn { width: 22px; height: 22px; border: none; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; transition: background 0.15s, color 0.15s; }
+.cart-mini-btn.plus { background: rgba(224,123,58,0.15); color: var(--primary); }
+.cart-mini-btn.minus { background: var(--surface2); color: var(--muted); }
+.cart-mini-btn.plus:hover { background: var(--primary); color: #fff; }
+.cart-mini-btn.minus:hover { background: var(--red); color: #fff; }
 
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 10px;
-    margin-top: 24px;
-  }
+.divider { height: 1px; background: var(--border); margin: 16px 0; }
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.input-wrap { position: relative; }
+.input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.input-icon-top { top: 14px; transform: none; }
+.field input, .field textarea { width: 100%; padding: 11px 12px 11px 38px; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; outline: none; transition: border-color 0.2s; }
+.field input:focus, .field textarea:focus { border-color: var(--primary); }
+.field textarea { resize: vertical; min-height: 80px; padding-top: 11px; }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
 
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    box-shadow: var(--shadow);
-  }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 14px; cursor: pointer; transition: border-color 0.2s; }
+.toggle-row:hover { border-color: var(--primary); }
+.toggle-label { font-weight: 600; font-size: 0.9rem; }
+.toggle-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.toggle-switch { width: 46px; height: 26px; background: var(--border); border-radius: 999px; position: relative; transition: background 0.3s; flex-shrink: 0; }
+.toggle-switch.on { background: var(--primary); }
+.toggle-knob { width: 20px; height: 20px; background: #fff; border-radius: 50%; position: absolute; top: 3px; left: 3px; transition: transform 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.25); }
+.toggle-switch.on .toggle-knob { transform: translateX(20px); }
+.delivery-fields { display: none; }
+.delivery-fields.show { display: block; animation: fadeDown 0.25s ease; }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
 
-  /* Item Cards */
-  .item-card {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    background: var(--input-bg);
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-bottom: 10px;
-  }
+.summary-box { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 14px 16px; margin-top: 16px; }
+.sum-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--muted); padding: 5px 0; border-bottom: 1px dashed var(--border); }
+.sum-row:last-child { border-bottom: none; }
+.sum-row.total { font-size: 1.1rem; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--primary); padding-top: 10px; margin-top: 4px; }
 
-  .item-card:last-child { margin-bottom: 0; }
+.submit-btn { width: 100%; padding: 15px; background: var(--primary); color: #fff; border: none; border-radius: var(--radius-sm); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 16px; transition: background 0.2s, transform 0.15s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(224,123,58,0.3); }
+.submit-btn:hover:not(:disabled) { background: var(--primary-dk); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(224,123,58,0.4); }
+.submit-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; box-shadow: none; }
 
-  .item-card:hover { border-color: var(--accent); background: var(--accent-light); }
+.error-box { background: rgba(224,85,85,0.1); border: 1px solid rgba(224,85,85,0.3); color: #f88; font-size: 0.82rem; border-radius: var(--radius-sm); padding: 10px 14px; margin-top: 10px; display: none; }
+.error-box.show { display: block; animation: fadeDown 0.2s ease; }
 
-  .item-card.active {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
-
-  .item-radio {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-    transition: all 0.2s;
-    display: flex; align-items: center; justify-content: center;
-  }
-
-  .item-card.active .item-radio {
-    border-color: var(--accent);
-    background: var(--accent);
-  }
-
-  .item-card.active .item-radio::after {
-    content: '';
-    width: 8px; height: 8px;
-    background: white;
-    border-radius: 50%;
-  }
-
-  .item-emoji { font-size: 28px; }
-
-  .item-info { flex: 1; }
-  .item-name { font-weight: 600; font-size: 15px; }
-  .item-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-  .item-price {
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--accent);
-  }
-
-  /* Quantity Selector */
-  .qty-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    background: var(--input-bg);
-    border: 1.5px solid var(--border);
-    border-radius: 50px;
-    overflow: hidden;
-    width: fit-content;
-  }
-
-  .qty-btn {
-    width: 44px; height: 44px;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: var(--accent);
-    font-weight: 600;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.15s;
-    flex-shrink: 0;
-  }
-
-  .qty-btn:hover { background: var(--accent-light); }
-
-  .qty-display {
-    min-width: 50px;
-    text-align: center;
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text);
-    border: none;
-    border-left: 1.5px solid var(--border);
-    border-right: 1.5px solid var(--border);
-    background: transparent;
-    padding: 0 8px;
-    height: 44px;
-    line-height: 44px;
-  }
-
-  /* Name Input */
-  .input-group { margin-bottom: 14px; }
-  .input-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text-muted);
-    margin-bottom: 6px;
-  }
-
-  .input-group input, .input-group textarea {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    background: var(--input-bg);
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .input-group input:focus, .input-group textarea:focus {
-    border-color: var(--accent);
-  }
-
-  .input-group textarea { resize: vertical; min-height: 80px; }
-
-  /* Toggle Switch */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 18px;
-    background: var(--input-bg);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
-
-  .toggle-left { display: flex; align-items: center; gap: 12px; }
-  .toggle-icon { font-size: 22px; }
-  .toggle-title { font-weight: 600; font-size: 15px; }
-  .toggle-sub { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
-
-  .toggle-switch {
-    width: 50px; height: 28px;
-    background: var(--border);
-    border-radius: 50px;
-    position: relative;
-    transition: background 0.3s;
-    flex-shrink: 0;
-  }
-
-  .toggle-switch.on { background: var(--accent); }
-
-  .toggle-knob {
-    width: 22px; height: 22px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 3px; left: 3px;
-    transition: transform 0.3s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
-  }
-
-  .toggle-switch.on .toggle-knob { transform: translateX(22px); }
-
-  .delivery-fields {
-    display: none;
-    margin-top: 14px;
-  }
-
-  .delivery-fields.show { display: block; }
-
-  /* Price Summary */
-  .price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    font-size: 14px;
-    color: var(--text-muted);
-    border-bottom: 1px dashed var(--border);
-  }
-
-  .price-row:last-child { border-bottom: none; }
-
-  .price-row.total {
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-    padding-top: 12px;
-  }
-
-  .price-row.total span:last-child { color: var(--accent); }
-
-  /* Submit Button */
-  .submit-btn {
-    width: 100%;
-    padding: 17px;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: var(--radius-sm);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    margin-top: 20px;
-    letter-spacing: 0.2px;
-  }
-
-  .submit-btn:hover { background: var(--accent-dark); }
-  .submit-btn:active { transform: scale(0.99); }
-  .submit-btn:disabled { background: var(--border); cursor: not-allowed; color: var(--text-muted); }
-
-  .notice {
-    font-size: 12px;
-    color: var(--text-muted);
-    text-align: center;
-    margin-top: 12px;
-  }
-
-  /* Loading State */
-  .loading-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(253,248,243,0.9);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .loading-overlay.show { display: flex; }
-
-  .spinner {
-    width: 48px; height: 48px;
-    border: 3px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .qty-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: 6px;
-  }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); z-index: 999; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+.overlay.show { display: flex; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+.spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.75s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.overlay-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 16px; box-shadow: var(--shadow); }
+.overlay-card p { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--muted); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="shop-icon">🫓</div>
-  <h1>Rooti & Naan Shop</h1>
-  <p>Taaza • Garam • Swadisht</p>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1>Rooti &amp; Naan Shop</h1>
+    <p class="hero-sub">Taaza &bull; Garam &bull; Swadisht</p>
+  </div>
 </div>
 
-<div class="form-container">
+<div class="info-banner">
+  <div class="info-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    Est. 20–30 mins
+  </div>
+  <div class="info-divider"></div>
+  <div class="info-item">
+    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    4.9 / 5.0 Rating
+  </div>
+  <div class="info-divider"></div>
+  <div class="info-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+    Free Pickup Available
+  </div>
+</div>
 
-  <!-- Customer Name -->
-  <div class="section-label">Aapka Naam</div>
-  <div class="card">
-    <div class="input-group" style="margin-bottom:0;">
-      <input type="text" id="customerName" placeholder="Naam likhein..." />
-    </div>
+<div class="wrapper">
+  <div>
+    <h2 class="section-title">Menu Items</h2>
+    <div class="menu-list" id="menuList"></div>
   </div>
 
-  <!-- Item Selection -->
-  <div class="section-label">Item Select Karein</div>
-  <div class="card">
-    <div class="item-card active" data-item="rooti" data-price="15" onclick="selectItem(this)">
-      <div class="item-radio"></div>
-      <div class="item-emoji">🫓</div>
-      <div class="item-info">
-        <div class="item-name">Rooti</div>
-        <div class="item-desc">Tandoor mein paki, crispy</div>
-      </div>
-      <div class="item-price">Rs. 15</div>
+  <div class="order-panel">
+    <div class="panel-title">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      Your Order
     </div>
 
-    <div class="item-card" data-item="naan" data-price="25" onclick="selectItem(this)">
-      <div class="item-radio"></div>
-      <div class="item-emoji">🍞</div>
-      <div class="item-info">
-        <div class="item-name">Naan</div>
-        <div class="item-desc">Soft, butter wali</div>
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
       </div>
-      <div class="item-price">Rs. 25</div>
+      <p>Items Select Karein</p>
+      <small>Your cart is empty</small>
     </div>
 
-    <div class="item-card" data-item="kulcha" data-price="30" onclick="selectItem(this)">
-      <div class="item-radio"></div>
-      <div class="item-emoji">🥙</div>
-      <div class="item-info">
-        <div class="item-name">Kulcha</div>
-        <div class="item-desc">Stuffed, crispy edges</div>
-      </div>
-      <div class="item-price">Rs. 30</div>
-    </div>
-  </div>
+    <div id="cartContent" style="display:none;">
+      <div class="cart-items" id="cartItems"></div>
+      <div class="divider"></div>
 
-  <!-- Quantity -->
-  <div class="section-label">Quantity</div>
-  <div class="card">
-    <div class="qty-row">
-      <span style="font-size:14px; color: var(--text-muted);">Kitni chahiye?</span>
-      <div class="qty-wrapper">
-        <button class="qty-btn" onclick="changeQty(-1)">−</button>
-        <div class="qty-display" id="qtyDisplay">1</div>
-        <button class="qty-btn" onclick="changeQty(1)">+</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Delivery Toggle -->
-  <div class="section-label">Delivery</div>
-  <div class="card">
-    <div class="toggle-row" onclick="toggleDelivery()">
-      <div class="toggle-left">
-        <div class="toggle-icon">🛵</div>
-        <div>
-          <div class="toggle-title">Home Delivery</div>
-          <div class="toggle-sub">Ghar par mangwayen</div>
+      <div class="field">
+        <label>Aapka Naam (Name)</label>
+        <div class="input-wrap">
+          <svg class="input-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <input type="text" id="customerName" placeholder="John Doe" />
         </div>
       </div>
-      <div class="toggle-switch" id="deliveryToggle">
-        <div class="toggle-knob"></div>
-      </div>
-    </div>
 
-    <div class="delivery-fields" id="deliveryFields">
-      <div class="input-group">
-        <label>Delivery Address</label>
-        <textarea id="deliveryAddress" placeholder="Ghar ka poora address likhein..."></textarea>
+      <div class="toggle-row" onclick="toggleDelivery()">
+        <div>
+          <div class="toggle-label">Ghar par mangwayen</div>
+          <div class="toggle-sub">Home Delivery — Rs. 50 extra</div>
+        </div>
+        <div class="toggle-switch" id="deliverySwitch"><div class="toggle-knob"></div></div>
       </div>
-      <div class="input-group" style="margin-bottom:0;">
-        <label>Phone Number</label>
-        <input type="tel" id="phoneNumber" placeholder="03XX-XXXXXXX" />
+
+      <div class="delivery-fields" id="deliveryFields">
+        <div class="field">
+          <label>Phone Number</label>
+          <div class="input-wrap">
+            <svg class="input-icon" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.37 19 19.45 19.45 0 0 1 5 12.63 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <input type="tel" id="phoneNumber" placeholder="03XX XXXXXXX" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Pata (Address)</label>
+          <div class="input-wrap">
+            <svg class="input-icon input-icon-top" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <textarea id="deliveryAddress" placeholder="House #, Street, Area, City..."></textarea>
+          </div>
+        </div>
       </div>
+
+      <div class="summary-box" id="summaryBox"></div>
+      <div class="error-box" id="errorBox"></div>
+      <button class="submit-btn" id="submitBtn" onclick="submitOrder()">Order Place Karein &rarr;</button>
     </div>
   </div>
-
-  <!-- Price Summary -->
-  <div class="section-label">Order Summary</div>
-  <div class="card">
-    <div class="price-row">
-      <span id="summaryItem">Rooti × 1</span>
-      <span id="summaryPrice">Rs. 15</span>
-    </div>
-    <div class="price-row" id="deliveryRow" style="display:none;">
-      <span>Delivery Charge</span>
-      <span> +  </span>
-    </div>
-    <div class="price-row total">
-      <span>Total</span>
-      <span id="totalPrice">Rs. 15</span>
-    </div>
-  </div>
-
-  <button class="submit-btn" id="submitBtn" onclick="submitOrder()">
-    Order Place Karein →
-  </button>
-  <p class="notice">Order submit hone ke baad aapko Token Number milega</p>
-
 </div>
 
-<!-- Loading -->
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="spinner"></div>
-  <p style="color: var(--text-muted); font-size:14px;">Order bheja ja raha hai...</p>
+<div class="overlay" id="loadingOverlay">
+  <div class="overlay-card">
+    <div class="spinner"></div>
+    <p>Tandoor mein daal rahe hain...</p>
+  </div>
 </div>
 
 <script>
-  const N8N_WEBHOOK_URL = 'https://rootinaan.app.n8n.cloud/webhook-test/rooti-naan-order';
+const WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL_HERE';
 
-  let selectedItem = 'rooti';
-  let selectedPrice = 15;
-  let quantity = 1;
-  let isDelivery = false;
+const MENU = [
+  { id:'rooti', name:'Tandoori Rooti', price:15, description:'Classic whole wheat flatbread, baked fresh in the tandoor — soft inside, perfectly charred outside.', img:'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80', badge:'Bestseller' },
+  { id:'naan',  name:'Garlic Butter Naan', price:25, description:'Soft, pillowy naan brushed generously with garlic butter and fresh herbs. Simply irresistible.', img:'https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&q=80', badge:'Popular' },
+  { id:'kulcha',name:'Stuffed Kulcha', price:30, description:'Flaky, layered flatbread stuffed with spiced potatoes and caramelized onions. A complete meal.', img:'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&q=80', badge:null },
+];
 
-  function selectItem(el) {
-    document.querySelectorAll('.item-card').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    selectedItem = el.dataset.item;
-    selectedPrice = parseInt(el.dataset.price);
-    updateSummary();
-  }
+let cart = {};
+let isDelivery = false;
 
-  function changeQty(delta) {
-    quantity = Math.max(1, Math.min(50, quantity + delta));
-    document.getElementById('qtyDisplay').textContent = quantity;
-    updateSummary();
-  }
+function renderMenu() {
+  const list = document.getElementById('menuList');
+  list.innerHTML = '';
+  MENU.forEach(item => {
+    const qty = cart[item.id] || 0;
+    list.innerHTML += `
+      <div class="menu-card">
+        <div class="menu-img-wrap">
+          <img src="${item.img}" alt="${item.name}" loading="lazy" />
+          ${item.badge ? `<span class="badge">${item.badge}</span>` : ''}
+        </div>
+        <div class="menu-body">
+          <div>
+            <div class="menu-header">
+              <span class="menu-name">${item.name}</span>
+              <span class="menu-price">Rs. ${item.price}</span>
+            </div>
+            <p class="menu-desc">${item.description}</p>
+          </div>
+          <div class="menu-footer">
+            ${qty > 0
+              ? `<div class="qty-ctrl">
+                   <button class="qty-btn" onclick="changeQty('${item.id}',-1)">−</button>
+                   <div class="qty-num">${qty}</div>
+                   <button class="qty-btn" onclick="changeQty('${item.id}',+1)">+</button>
+                 </div>`
+              : `<button class="add-btn" onclick="changeQty('${item.id}',1)">
+                   <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                   Add
+                 </button>`
+            }
+          </div>
+        </div>
+      </div>`;
+  });
+}
 
-  function toggleDelivery() {
-    isDelivery = !isDelivery;
-    const toggle = document.getElementById('deliveryToggle');
-    const fields = document.getElementById('deliveryFields');
-    const row = document.getElementById('deliveryRow');
-    toggle.classList.toggle('on', isDelivery);
-    fields.classList.toggle('show', isDelivery);
-    row.style.display = isDelivery ? 'flex' : 'none';
-    updateSummary();
-  }
+function changeQty(id, delta) {
+  const cur = cart[id] || 0;
+  const next = Math.max(0, Math.min(50, cur + delta));
+  if (next === 0) delete cart[id]; else cart[id] = next;
+  renderMenu();
+  renderCart();
+}
 
-  function updateSummary() {
-    const itemNames = { rooti: 'Rooti', naan: 'Naan', kulcha: 'Kulcha' };
-    const subtotal = selectedPrice * quantity;
-    const deliveryCharge = 0;
-    const total = subtotal + deliveryCharge;
-    document.getElementById('summaryItem').textContent = `${itemNames[selectedItem]} × ${quantity}`;
-    document.getElementById('summaryPrice').textContent = `Rs. ${subtotal}`;
-    document.getElementById('totalPrice').textContent = `Rs. ${total}`;
-  }
+function renderCart() {
+  const keys = Object.keys(cart);
+  document.getElementById('cartEmpty').style.display = keys.length === 0 ? 'block' : 'none';
+  document.getElementById('cartContent').style.display = keys.length === 0 ? 'none' : 'block';
+  if (keys.length === 0) return;
 
-  async function submitOrder() {
-    const name = document.getElementById('customerName').value.trim();
-    if (!name) {
-      alert('Please enter your name!');
-      document.getElementById('customerName').focus();
-      return;
-    }
-    if (isDelivery) {
-      const addr = document.getElementById('deliveryAddress').value.trim();
-      const phone = document.getElementById('phoneNumber').value.trim();
-      if (!addr || !phone) {
-        alert('Delivery ke liye address aur phone number zaroori hai');
-        return;
-      }
-    }
+  const cartItemsEl = document.getElementById('cartItems');
+  cartItemsEl.innerHTML = '';
+  keys.forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    const qty = cart[id];
+    cartItemsEl.innerHTML += `
+      <div class="cart-row">
+        <div>
+          <div class="cart-row-name">${item.name}</div>
+          <div class="cart-row-sub">Rs. ${item.price} × ${qty}</div>
+        </div>
+        <div class="cart-row-right">
+          <span class="cart-row-price">Rs. ${item.price * qty}</span>
+          <div class="cart-mini-btns">
+            <button class="cart-mini-btn plus" onclick="changeQty('${id}',+1)">+</button>
+            <button class="cart-mini-btn minus" onclick="changeQty('${id}',-1)">−</button>
+          </div>
+        </div>
+      </div>`;
+  });
+  renderSummary();
+}
 
-    const itemNames = { rooti: 'Rooti', naan: 'Naan', kulcha: 'Kulcha' };
-    const subtotal = selectedPrice * quantity;
-    const deliveryCharge = 0;
-    const total = subtotal + deliveryCharge;
-    const tokenNum = Math.floor(1000 + Math.random() * 9000);
-    const timestamp = new Date().toISOString();
+function renderSummary() {
+  const keys = Object.keys(cart);
+  let subtotal = 0;
+  let rows = '';
+  keys.forEach(id => {
+    const item = MENU.find(m => m.id === id);
+    const tot = item.price * cart[id];
+    subtotal += tot;
+    rows += `<div class="sum-row"><span>${item.name} × ${cart[id]}</span><span>Rs. ${tot}</span></div>`;
+  });
+  if (isDelivery) rows += `<div class="sum-row"><span>Delivery Charge</span><span>Rs. 50</span></div>`;
+  rows += `<div class="sum-row total"><span>Total</span><span>Rs. ${subtotal + (isDelivery ? 50 : 0)}</span></div>`;
+  document.getElementById('summaryBox').innerHTML = rows;
+  document.getElementById('submitBtn').disabled = keys.length === 0;
+}
 
-    const orderData = {
-      token: tokenNum,
-      customerName: name,
-      item: itemNames[selectedItem],
-      pricePerItem: selectedPrice,
-      quantity: quantity,
-      subtotal: subtotal,
-      deliveryCharge: deliveryCharge,
-      totalPrice: total,
-      isDelivery: isDelivery,
-      deliveryAddress: isDelivery ? document.getElementById('deliveryAddress').value.trim() : '',
-      phone: isDelivery ? document.getElementById('phoneNumber').value.trim() : '',
-      status: 'Pending',
-      timestamp: timestamp
-    };
+function toggleDelivery() {
+  isDelivery = !isDelivery;
+  document.getElementById('deliverySwitch').classList.toggle('on', isDelivery);
+  document.getElementById('deliveryFields').classList.toggle('show', isDelivery);
+  renderSummary();
+}
 
-    document.getElementById('loadingOverlay').classList.add('show');
-    document.getElementById('submitBtn').disabled = true;
+async function submitOrder() {
+  const name = document.getElementById('customerName').value.trim();
+  const phone = document.getElementById('phoneNumber').value.trim();
+  const address = document.getElementById('deliveryAddress').value.trim();
+  const errorBox = document.getElementById('errorBox');
+  errorBox.classList.remove('show');
 
-    try {
-      await fetch(N8N_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        mode: 'no-cors',
-        body: JSON.stringify(orderData)
-      });
-    } catch (e) {
-      console.log('Webhook error (may be no-cors):', e);
-    }
+  if (!name) { showError('Naam likhna zaroori hai!'); return; }
+  if (isDelivery && !phone) { showError('Phone number likhna zaroori hai delivery ke liye!'); return; }
+  if (isDelivery && !address) { showError('Address likhna zaroori hai delivery ke liye!'); return; }
 
-    setTimeout(() => {
-      const params = new URLSearchParams({
-        token: tokenNum,
-        name: name,
-        item: itemNames[selectedItem],
-        qty: quantity,
-        total: total,
-        delivery: isDelivery ? '1' : '0',
-        address: isDelivery ? document.getElementById('deliveryAddress').value.trim() : ''
-      });
-      window.location.href = 'token.html?' + params.toString();
-    }, 1500);
-  }
+  const keys = Object.keys(cart);
+  if (!keys.length) return;
+
+  const token = String(Math.floor(1000 + Math.random() * 9000));
+  const subtotal = keys.reduce((s,id) => s + MENU.find(m=>m.id===id).price * cart[id], 0);
+  const total = subtotal + (isDelivery ? 50 : 0);
+
+  const webhookData = {
+    customerName: name,
+    items: keys.map(id => ({ name: MENU.find(m=>m.id===id).name, price: MENU.find(m=>m.id===id).price, quantity: cart[id] })),
+    isDelivery, phone: isDelivery ? phone : null, address: isDelivery ? address : null,
+    subtotal, deliveryCharge: isDelivery ? 50 : 0, total,
+    token, timestamp: new Date().toISOString(),
+  };
+
+  document.getElementById('loadingOverlay').classList.add('show');
+  try {
+    await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(webhookData) });
+  } catch(e) { console.warn('Webhook:', e); }
+  document.getElementById('loadingOverlay').classList.remove('show');
+
+  const orderRecord = {
+    token,
+    customerName: name,
+    items: keys.map(id => ({
+      item: MENU.find(m=>m.id===id).name,
+      quantity: cart[id],
+      subtotal: MENU.find(m=>m.id===id).price * cart[id]
+    })),
+    itemSummary: keys.map(id => `${MENU.find(m=>m.id===id).name} × ${cart[id]}`).join(', '),
+    totalPrice: total,
+    isDelivery,
+    phone: isDelivery ? phone : '',
+    deliveryAddress: isDelivery ? address : '',
+    status: 'Pending',
+    timestamp: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 80 * 60 * 1000).toISOString()
+  };
+
+  const existing = JSON.parse(localStorage.getItem('rns_orders') || '[]');
+  existing.push(orderRecord);
+  localStorage.setItem('rns_orders', JSON.stringify(existing));
+
+  window.location.href = 'n_token.html';
+}
+
+function showError(msg) {
+  const el = document.getElementById('errorBox');
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+renderMenu();
+renderCart();
 </script>
 </body>
 </html>
