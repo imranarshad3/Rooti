@@ -1,400 +1,273 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Token - Rooti & Naan Shop</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<title>Order Token — Rooti & Naan Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #FDF8F3;
-    --text: #1A1208;
-    --text-muted: #6B5B45;
-    --accent: #C8541A;
-    --accent-light: #FAEEE6;
-    --border: #E8DDD0;
-    --card: #FFFFFF;
-    --success: #2D7A4F;
-    --success-bg: #EDF7F2;
-  }
+:root {
+  --bg:       #0d1117;
+  --surface:  #161b22;
+  --surface2: #1c2230;
+  --border:   #253047;
+  --text:     #e8dcc8;
+  --muted:    #8b7d6b;
+  --primary:  #e07b3a;
+  --primary2: #c4621e;
+  --gold:     #f0b429;
+  --green:    #34c77b;
+  --green-bg: rgba(52,199,123,0.1);
+  --red:      #e05555;
+  --red-bg:   rgba(224,85,85,0.1);
+  --radius:   16px;
+  --shadow:   0 8px 40px rgba(0,0,0,0.5);
+}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px 16px 48px;
-  }
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px 60px;
+}
 
-  .success-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--success-bg);
-    color: var(--success);
-    padding: 8px 18px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    border: 1px solid rgba(45,122,79,0.2);
-  }
+.success-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green-bg);
+  border: 1px solid rgba(52,199,123,0.3);
+  color: var(--green);
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 28px;
+  animation: fadeDown 0.5s ease;
+}
+.success-badge .check {
+  width: 20px; height: 20px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #0d1117;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
 
-  .check-circle {
-    width: 20px; height: 20px;
-    background: var(--success);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    color: white;
-    font-size: 11px;
-  }
+.order-counter { font-size: 0.8rem; color: var(--muted); margin-bottom: 14px; display: none; }
+.order-counter span { color: var(--primary); font-weight: 700; }
 
-  /* TICKET CARD */
-  .ticket {
-    width: 100%;
-    max-width: 380px;
-    background: var(--card);
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 40px rgba(200,84,26,0.12), 0 2px 8px rgba(0,0,0,0.04);
-    position: relative;
-  }
+.dots-row { display: flex; gap: 7px; margin-bottom: 22px; align-items: center; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); cursor: pointer; transition: all 0.3s; }
+.dot.active { background: var(--primary); transform: scale(1.4); }
 
-  .ticket-header {
-    background: var(--accent);
-    padding: 24px 28px 20px;
-    text-align: center;
-    color: white;
-    position: relative;
-  }
+.swipe-wrapper { width: 100%; max-width: 420px; overflow: hidden; }
+.swipe-track { display: flex; transition: transform 0.38s cubic-bezier(0.4,0,0.2,1); }
+.slide { min-width: 100%; padding: 0 2px; }
 
-  .ticket-header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0; right: 0;
-    height: 20px;
-    background: var(--card);
-    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  }
+.nav-row { display: none; align-items: center; gap: 14px; margin-top: 18px; }
+.nav-btn {
+  width: 42px; height: 42px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s, background 0.2s;
+}
+.nav-btn:hover:not(:disabled) { border-color: var(--primary); background: rgba(224,123,58,0.08); }
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+.nav-label { font-size: 0.8rem; color: var(--muted); }
 
-  .shop-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 0.2px;
-    margin-bottom: 4px;
-  }
+.ticket {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  position: relative;
+  animation: riseUp 0.5s ease;
+}
+@keyframes riseUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
 
-  .shop-tagline {
-    font-size: 11px;
-    opacity: 0.8;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-weight: 300;
-  }
+.ticket-header {
+  background: linear-gradient(135deg, #1a2540 0%, #0d1117 100%);
+  padding: 28px 28px 36px;
+  text-align: center;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+.ticket-header::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(224,123,58,0.12) 0%, transparent 70%);
+}
+.ticket-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px; left: 0; right: 0;
+  height: 24px;
+  background: var(--surface);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.shop-icon-wrap {
+  width: 52px; height: 52px;
+  background: rgba(224,123,58,0.15);
+  border: 1px solid rgba(224,123,58,0.3);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+  font-size: 1.6rem;
+}
+.shop-name { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.shop-tagline { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--primary); font-weight: 500; }
 
-  .ticket-body {
-    padding: 28px 28px 20px;
-  }
+.token-section { padding: 28px 28px 0; text-align: center; }
+.token-label-txt { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
+.token-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 5.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin-bottom: 6px;
+  text-shadow: 0 0 40px rgba(224,123,58,0.3);
+}
+.token-hash {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 6px;
+  display: inline-block;
+  margin-bottom: 24px;
+}
 
-  .token-label {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    text-align: center;
-    margin-bottom: 8px;
-  }
+.tear-line { position: relative; height: 2px; margin: 0 -1px; display: flex; align-items: center; }
+.tear-line .line { flex: 1; height: 1px; border-top: 2px dashed var(--border); margin: 0 16px; }
+.tear-hole { width: 26px; height: 26px; background: var(--bg); border-radius: 50%; flex-shrink: 0; border: 1px solid var(--border); margin: 0 -13px; z-index: 2; }
 
-  .token-number {
-    font-family: 'Playfair Display', serif;
-    font-size: 72px;
-    font-weight: 900;
-    color: var(--accent);
-    text-align: center;
-    line-height: 1;
-    letter-spacing: -2px;
-    margin-bottom: 6px;
-  }
+.ticket-body { padding: 20px 24px 16px; }
+.detail-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 9px 0; font-size: 0.83rem; border-bottom: 1px solid var(--border); gap: 12px; }
+.detail-row:last-child { border-bottom: none; }
+.detail-label { color: var(--muted); font-weight: 400; flex-shrink: 0; }
+.detail-value { font-weight: 600; color: var(--text); text-align: right; }
 
-  .token-hash {
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-bottom: 24px;
-  }
+.pill { font-size: 0.68rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.04em; }
+.pill-pending { background: rgba(240,180,41,0.12); color: var(--gold); border: 1px solid rgba(240,180,41,0.25); }
+.pill-done    { background: var(--green-bg); color: var(--green); border: 1px solid rgba(52,199,123,0.25); }
+.pill-expired { background: var(--red-bg); color: var(--red); border: 1px solid rgba(224,85,85,0.25); }
 
-  /* Dashed divider */
-  .dashed-line {
-    position: relative;
-    margin: 20px -28px;
-    height: 1px;
-  }
+.items-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; width: 100%; }
+.item-line { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text); padding: 4px 0; border-bottom: 1px solid var(--border); }
+.item-line:last-child { border-bottom: none; }
+.item-line span:last-child { color: var(--primary); font-weight: 600; }
 
-  .dashed-line::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 20px; right: 20px;
-    border-top: 2px dashed var(--border);
-  }
+.delivery-box { display: flex; gap: 10px; align-items: flex-start; background: rgba(224,123,58,0.07); border: 1px dashed rgba(224,123,58,0.3); border-radius: 10px; padding: 10px 14px; margin: 10px 0; font-size: 0.8rem; }
+.delivery-box .icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+.delivery-box .addr { font-size: 0.72rem; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 
-  .dashed-line .circle-left, .dashed-line .circle-right {
-    position: absolute;
-    top: -12px;
-    width: 24px; height: 24px;
-    background: var(--bg);
-    border-radius: 50%;
-    border: 1px solid var(--border);
-  }
+.total-box {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+  box-shadow: 0 4px 16px rgba(224,123,58,0.3);
+}
+.total-box .tl { font-size: 0.8rem; color: rgba(255,255,255,0.8); }
+.total-box .amt { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
 
-  .dashed-line .circle-left { left: -13px; }
-  .dashed-line .circle-right { right: -13px; }
+.barcode-section { border-top: 1px solid var(--border); background: #0a0e14; padding: 18px 24px 22px; text-align: center; }
+.barcode-label { font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; font-weight: 500; }
+.barcode-svg { max-width: 100%; }
+.scan-hint { font-size: 0.7rem; color: var(--muted); margin-top: 8px; }
 
-  /* Order Details */
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 0;
-    font-size: 14px;
-    border-bottom: 1px solid var(--border);
-  }
+.expired-overlay {
+  position: absolute; inset: 0;
+  background: rgba(13,17,23,0.88);
+  backdrop-filter: blur(4px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border-radius: 22px; z-index: 10;
+}
+.expired-badge { background: var(--red-bg); border: 1px solid rgba(224,85,85,0.3); color: var(--red); font-size: 1.1rem; font-weight: 700; padding: 12px 28px; border-radius: 10px; margin-bottom: 8px; }
+.expired-sub { font-size: 0.75rem; color: var(--muted); }
 
-  .detail-row:last-child { border-bottom: none; }
+.instructions { width: 100%; max-width: 420px; margin-top: 28px; }
+.inst-title { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.inst-step { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+.step-num { width: 28px; height: 28px; background: rgba(224,123,58,0.12); border: 1px solid rgba(224,123,58,0.25); color: var(--primary); border-radius: 50%; font-size: 0.8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-text { font-size: 0.82rem; color: var(--muted); padding-top: 5px; line-height: 1.5; }
+.step-text strong { color: var(--text); font-weight: 600; }
 
-  .detail-label { color: var(--text-muted); font-weight: 400; }
-  .detail-value { font-weight: 600; color: var(--text); }
-  .detail-value.accent { color: var(--accent); }
+.action-row { display: flex; gap: 12px; margin-top: 24px; width: 100%; max-width: 420px; }
+.btn-sec, .btn-pri { flex: 1; padding: 14px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+.btn-sec { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.btn-sec:hover { border-color: var(--primary); }
+.btn-pri { background: linear-gradient(135deg, var(--primary) 0%, var(--primary2) 100%); color: #fff; box-shadow: 0 4px 16px rgba(224,123,58,0.3); }
+.btn-pri:hover { filter: brightness(1.08); box-shadow: 0 6px 20px rgba(224,123,58,0.4); }
 
-  .detail-value.status {
-    background: var(--success-bg);
-    color: var(--success);
-    font-size: 11px;
-    padding: 3px 10px;
-    border-radius: 50px;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-
-  /* Delivery Badge */
-  .delivery-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--accent-light);
-    border: 1px dashed var(--accent);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin: 16px 0;
-    font-size: 13px;
-  }
-
-  .delivery-badge .icon { font-size: 18px; }
-  .delivery-badge .addr { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-
-  /* Total Box */
-  .total-box {
-    background: var(--accent);
-    border-radius: 12px;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: white;
-    margin-top: 16px;
-  }
-
-  .total-box .label { font-size: 14px; opacity: 0.9; }
-  .total-box .amount { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; }
-
-  /* Barcode */
-  .barcode-section {
-    padding: 20px 28px 24px;
-    border-top: 1px solid var(--border);
-    text-align: center;
-    background: #FAFAFA;
-  }
-
-  .barcode-label {
-    font-size: 10px;
-    letter-spacing: 1.8px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-    font-weight: 500;
-  }
-
-  #barcode { max-width: 100%; height: 70px; }
-
-  .scan-hint {
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 8px;
-  }
-
-  /* Instructions */
-  .instructions {
-    margin-top: 24px;
-    width: 100%;
-    max-width: 380px;
-  }
-
-  .inst-title {
-    font-size: 11px;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 12px;
-    padding: 0 4px;
-  }
-
-  .inst-step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 10px;
-    padding: 0 4px;
-  }
-
-  .step-num {
-    width: 26px; height: 26px;
-    background: var(--accent-light);
-    color: var(--accent);
-    border-radius: 50%;
-    font-size: 13px;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .step-text { font-size: 13px; color: var(--text-muted); padding-top: 4px; }
-  .step-text strong { color: var(--text); font-weight: 600; }
-
-  /* Action Buttons */
-  .action-row {
-    display: flex;
-    gap: 10px;
-    margin-top: 24px;
-    width: 100%;
-    max-width: 380px;
-  }
-
-  .btn-secondary, .btn-primary {
-    flex: 1;
-    padding: 14px;
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.2s;
-  }
-
-  .btn-secondary {
-    background: var(--card);
-    border: 1.5px solid var(--border);
-    color: var(--text);
-  }
-
-  .btn-secondary:hover { background: var(--bg); border-color: var(--accent); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: white;
-  }
-
-  .btn-primary:hover { filter: brightness(0.9); }
-
-  @media print {
-    body { background: white; padding: 0; }
-    .instructions, .action-row, .success-badge { display: none; }
-    .ticket { box-shadow: none; border: 1px solid #ddd; max-width: 100%; }
-  }
+@media print {
+  body { background: white; color: #111; padding: 0; }
+  .success-badge, .instructions, .action-row, .dots-row, .nav-row, .order-counter { display: none !important; }
+  .ticket { background: white; border: 1px solid #ddd; box-shadow: none; }
+  .ticket-header { background: #c8541a !important; }
+  .token-number { color: #c8541a !important; }
+  .ticket-body, .token-section, .barcode-section { background: white; }
+  .total-box { background: #c8541a !important; }
+  .items-box { background: #f5f5f5; }
+  .tear-hole { background: white; }
+}
 </style>
 </head>
 <body>
 
 <div class="success-badge">
-  <div class="check-circle">✓</div>
-  Order Successfully Place Ho Gaya!
+  <div class="check">✓</div>
+  <span id="badgeText">Order Successfully Place Ho Gaya!</span>
 </div>
 
-<div class="ticket" id="ticket">
-  <div class="ticket-header">
-    <div class="shop-name">🫓 Rooti & Naan Shop</div>
-    <div class="shop-tagline">Your Order Token</div>
-  </div>
+<div class="order-counter" id="orderCounter">
+  Aapke <span id="totalOrderCount">0</span> orders hain — slide karein
+</div>
+<div class="dots-row" id="dotsRow"></div>
 
-  <div class="ticket-body">
-    <div class="token-label">Token Number</div>
-    <div class="token-number" id="tokenNum">—</div>
-    <div class="token-hash" id="tokenHash">#RNS-0000</div>
-
-    <div class="dashed-line">
-      <div class="circle-left"></div>
-      <div class="circle-right"></div>
-    </div>
-
-    <div class="detail-row">
-      <span class="detail-label">Customer</span>
-      <span class="detail-value" id="detailName">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Item</span>
-      <span class="detail-value" id="detailItem">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Quantity</span>
-      <span class="detail-value" id="detailQty">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Type</span>
-      <span class="detail-value" id="detailType">—</span>
-    </div>
-    <div class="detail-row">
-      <span class="detail-label">Status</span>
-      <span class="detail-value status">Pending ⏳</span>
-    </div>
-
-    <div class="delivery-badge" id="deliveryInfo" style="display:none;">
-      <div class="icon">🛵</div>
-      <div>
-        <div style="font-weight:600; font-size:13px; color: var(--accent);">Home Delivery</div>
-        <div class="addr" id="deliveryAddr">—</div>
-      </div>
-    </div>
-
-    <div class="total-box">
-      <div class="label">Total Amount</div>
-      <div class="amount" id="totalAmount">Rs. —</div>
-    </div>
-  </div>
-
-  <div class="barcode-section">
-    <div class="barcode-label">Scan for Order Verification</div>
-    <svg id="barcode"></svg>
-    <div class="scan-hint">Counter par yeh barcode scan karwayein</div>
-  </div>
+<div class="swipe-wrapper">
+  <div class="swipe-track" id="swipeTrack"></div>
 </div>
 
-<!-- Instructions -->
+<div class="nav-row" id="navRow">
+  <button class="nav-btn" id="prevBtn" onclick="goSlide(-1)">←</button>
+  <span class="nav-label" id="slideLabel">1 / 1</span>
+  <button class="nav-btn" id="nextBtn" onclick="goSlide(1)">→</button>
+</div>
+
 <div class="instructions">
   <div class="inst-title">Aage Kya Karna Hai?</div>
-
   <div class="inst-step">
     <div class="step-num">1</div>
-    <div class="step-text">Yeh token <strong>screenshot</strong> kar lein ya print karwa lein</div>
+    <div class="step-text">Yeh token <strong>screenshot</strong> kar lein ya print karwayein</div>
   </div>
   <div class="inst-step">
     <div class="step-num">2</div>
@@ -407,46 +280,211 @@
 </div>
 
 <div class="action-row">
-  <button class="btn-secondary" onclick="window.print()">🖨 Print Token</button>
-  <button class="btn-primary" onclick="newOrder()">+ Naya Order</button>
+  <button class="btn-sec" onclick="window.print()">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print Karen
+  </button>
+  <button class="btn-pri" onclick="window.location.href='new.html'">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    Naya Order
+  </button>
 </div>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
+let orders = [];
+let currentSlide = 0;
 
-  const token = params.get('token') || Math.floor(1000 + Math.random() * 9000);
-  const name = params.get('name') || 'Customer';
-  const item = params.get('item') || 'Rooti';
-  const qty = params.get('qty') || '1';
-  const total = params.get('total') || '15';
-  const isDelivery = params.get('delivery') === '1';
-  const address = params.get('address') || '';
+function loadOrders() {
+  const stored = JSON.parse(localStorage.getItem('rns_orders') || '[]');
+  orders = stored.length ? stored : getFallbackOrder();
+  if (!orders.length) return;
+  orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  renderAll();
+}
 
-  document.getElementById('tokenNum').textContent = token;
-  document.getElementById('tokenHash').textContent = '#RNS-' + token;
-  document.getElementById('detailName').textContent = name;
-  document.getElementById('detailItem').textContent = item;
-  document.getElementById('detailQty').textContent = qty + ' pcs';
-  document.getElementById('detailType').textContent = isDelivery ? '🛵 Home Delivery' : '🏪 Counter Pickup';
-  document.getElementById('totalAmount').textContent = 'Rs. ' + total;
+function getFallbackOrder() {
+  const p = new URLSearchParams(window.location.search);
+  if (!p.get('token')) return [];
+  return [{
+    token: p.get('token'),
+    customerName: p.get('name') || 'Customer',
+    items: [{ item: p.get('item') || 'Rooti', quantity: p.get('qty') || 1, subtotal: parseInt(p.get('total') || 15) }],
+    itemSummary: p.get('item') || 'Rooti',
+    totalPrice: parseInt(p.get('total') || 15),
+    isDelivery: p.get('delivery') === '1',
+    deliveryAddress: p.get('address') || '',
+    status: 'Pending',
+    timestamp: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 80 * 60 * 1000).toISOString()
+  }];
+}
 
-  if (isDelivery && address) {
-    document.getElementById('deliveryInfo').style.display = 'flex';
-    document.getElementById('deliveryAddr').textContent = address;
+function isExpired(order) {
+  return order.expiresAt && new Date(order.expiresAt) < new Date();
+}
+
+function buildTicket(order, index) {
+  const expired = isExpired(order);
+  const isDone = order.status === 'Done';
+  const bcId = 'bc' + index;
+
+  let itemsHtml = '';
+  if (order.items && order.items.length) {
+    itemsHtml = `<div class="items-box">
+      ${order.items.map(i => `<div class="item-line"><span>${i.item} × ${i.quantity}</span><span>Rs. ${i.subtotal}</span></div>`).join('')}
+    </div>`;
+  } else {
+    itemsHtml = `<span class="detail-value">${order.itemSummary || 'N/A'}</span>`;
   }
 
-  JsBarcode("#barcode", 'RNS-' + token + '-' + total, {
-    format: "CODE128",
-    lineColor: "#1A1208",
-    width: 1.8,
-    height: 60,
-    displayValue: false,
-    margin: 0
+  let statusPill = '';
+  if (expired && !isDone) {
+    statusPill = `<span class="pill pill-expired">Expired</span>`;
+  } else if (isDone) {
+    statusPill = `<span class="pill pill-done">Done</span>`;
+  } else {
+    statusPill = `<span class="pill pill-pending">Pending</span>`;
+  }
+
+  const deliveryBox = (order.isDelivery && order.deliveryAddress)
+    ? `<div class="delivery-box">
+        <div class="icon">🛵</div>
+        <div>
+          <div style="font-size:0.8rem;font-weight:600;color:var(--primary);">Home Delivery</div>
+          <div class="addr">${order.deliveryAddress}</div>
+        </div>
+       </div>`
+    : '';
+
+  const expiredOverlay = (expired && !isDone)
+    ? `<div class="expired-overlay">
+        <div class="expired-badge">Order Expired</div>
+        <div class="expired-sub">80 minutes guzar gaye</div>
+       </div>`
+    : '';
+
+  return `
+    <div class="ticket">
+      ${expiredOverlay}
+      <div class="ticket-header">
+        <div class="shop-icon-wrap">🫓</div>
+        <div class="shop-name">Rooti &amp; Naan Shop</div>
+        <div class="shop-tagline">Taaza &bull; Garam &bull; Swadisht</div>
+      </div>
+      <div class="token-section">
+        <div class="token-label-txt">Token Number</div>
+        <div class="token-number">${order.token}</div>
+        <div class="token-hash">#RNS-${order.token}</div>
+      </div>
+      <div class="tear-line">
+        <div class="tear-hole"></div>
+        <div class="line"></div>
+        <div class="tear-hole"></div>
+      </div>
+      <div class="ticket-body">
+        <div class="detail-row">
+          <span class="detail-label">Customer</span>
+          <span class="detail-value">${order.customerName}</span>
+        </div>
+        <div class="detail-row" style="align-items:flex-start;">
+          <span class="detail-label" style="margin-top:2px;">Items</span>
+          <div style="flex:1;margin-left:8px;">${itemsHtml}</div>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Type</span>
+          <span class="detail-value">${order.isDelivery ? '🛵 Home Delivery' : '🏪 Counter Pickup'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          ${statusPill}
+        </div>
+        ${deliveryBox}
+        <div class="total-box">
+          <div class="tl">Total Amount</div>
+          <div class="amt">Rs. ${order.totalPrice}</div>
+        </div>
+      </div>
+      <div class="barcode-section">
+        <div class="barcode-label">Scan for Order Verification</div>
+        <svg id="${bcId}" class="barcode-svg"></svg>
+        <div class="scan-hint">Counter par yeh barcode scan karwayein</div>
+      </div>
+    </div>`;
+}
+
+function renderAll() {
+  const track = document.getElementById('swipeTrack');
+  const dotsRow = document.getElementById('dotsRow');
+  track.innerHTML = '';
+  dotsRow.innerHTML = '';
+
+  orders.forEach((order, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'slide';
+    slide.innerHTML = buildTicket(order, i);
+    track.appendChild(slide);
+
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dotsRow.appendChild(dot);
   });
 
-  function newOrder() {
-    window.location.href = 'index.html';
+  orders.forEach((order, i) => {
+    try {
+      JsBarcode('#bc' + i, `RNS-${order.token}-${order.totalPrice}`, {
+        format: 'CODE128',
+        lineColor: '#e07b3a',
+        background: '#0a0e14',
+        width: 1.6,
+        height: 52,
+        displayValue: false,
+        margin: 0
+      });
+    } catch (e) {}
+  });
+
+  if (orders.length > 1) {
+    document.getElementById('orderCounter').style.display = 'block';
+    document.getElementById('totalOrderCount').textContent = orders.length;
+    document.getElementById('navRow').style.display = 'flex';
   }
+
+  document.getElementById('badgeText').textContent = orders.length > 1
+    ? `${orders.length} orders place ho gaye!`
+    : 'Order Successfully Place Ho Gaya!';
+
+  updateSlideUI();
+
+  let startX = 0;
+  const wrapper = document.querySelector('.swipe-wrapper');
+  wrapper.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+  wrapper.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 45) goSlide(diff > 0 ? 1 : -1);
+  }, { passive: true });
+}
+
+function goSlide(dir) {
+  const next = currentSlide + dir;
+  if (next < 0 || next >= orders.length) return;
+  goToSlide(next);
+}
+
+function goToSlide(index) {
+  currentSlide = index;
+  updateSlideUI();
+}
+
+function updateSlideUI() {
+  document.getElementById('swipeTrack').style.transform = `translateX(-${currentSlide * 100}%)`;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === currentSlide));
+  document.getElementById('slideLabel').textContent = `${currentSlide + 1} / ${orders.length}`;
+  document.getElementById('prevBtn').disabled = currentSlide === 0;
+  document.getElementById('nextBtn').disabled = currentSlide === orders.length - 1;
+}
+
+loadOrders();
 </script>
 </body>
 </html>
